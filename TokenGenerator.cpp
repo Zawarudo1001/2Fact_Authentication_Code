@@ -2,7 +2,6 @@
 #include "RndGenerator.h"
 #include <chrono>
 #include <map>
-#include <bitset>
 
 
 using namespace std;
@@ -77,7 +76,7 @@ int main()
 	const auto p1 = system_clock::now();		//КБО сохраняет информацию о времени входа пилота после сопоставления токена и сертификата с точностью до минут
 
 
-	uint32_t time = duration_cast<seconds>(p1.time_since_epoch()).count();		//в 4 байтах можно сохранить информацию оо количестве прошедших минут
+	uint32_t time = duration_cast<seconds>(p1.time_since_epoch()).count();		//в беззнаковых 4 байтах можно сохранить информацию о количестве прошедших секунд до 2106 года
 	printf("%u  <- Timestamp (sec)\n", time);
 
 
@@ -102,23 +101,19 @@ int main()
 
 	char push_code[10];
 
-
-	//token = 0x8fed3974;
-	//time = 28530331;
-
 	uint32_t KBO_TOKEN = token;
 	printf("\n%x  <- KBO TOKEN\n", KBO_TOKEN);		// АВИАКОМПАНИЯ -> КБО
 
 	token = encaps_time(token, time);
 
-	printf("\n%x  <- Encapsulated time PILOT TOKEN\n", token);		// АВИАКОМПАНИЯ -> ПИЛОТ
+	printf("\n%x  <- Encapsulated time PILOT TOKEN\n", token);
 
 	encode_bytes_to_char(token, push_code);
 	printf("\n%s  <- Encoded to digits and chars code\n", push_code);		// АВИАКОМПАНИЯ -> ПИЛОТ
 
 	uint32_t temp_token = 0;
 	decode_chr_to_bytes(push_code, temp_token);
-	printf("\n%x <- Decoded PILOT TOKEN from dig-chr code\n", temp_token);
+	printf("\n%x <- Decoded PILOT TOKEN from dig-chr code\n", temp_token);		//ПИЛОТ -> КБО
 
 	uint32_t t = encaps_time(temp_token, KBO_TOKEN);
 	printf("\n%u <- Extracted timestamp from token\n", t);

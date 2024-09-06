@@ -71,6 +71,11 @@ void decode_chr_to_bytes(char* buf, uint32_t &token) {
 };
 
 
+uint64_t xor_n_xor (uint64_t temp1, uint64_t temp2){
+	return temp1 ^ temp2;
+} 
+
+
 int main()
 {
 	const auto p1 = system_clock::now();		//КБО сохраняет информацию о времени входа пилота после сопоставления токена и сертификата с точностью до минут
